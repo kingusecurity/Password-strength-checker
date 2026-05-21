@@ -21,25 +21,37 @@ def check_password(password):
 
     score = 0
 
+    feedback = []
+
     # Length check
     if len(password) >= 8:
         score += 1
+    else:
+        feedback.append("Password should be at least 8 characters")
 
     # Uppercase check
     if re.search(r"[A-Z]", password):
         score += 1
+    else:
+        feedback.append("Add uppercase letters")
 
     # Lowercase check
     if re.search(r"[a-z]", password):
         score += 1
+    else:
+        feedback.append("Add lowercase letters")
 
     # Number check
     if re.search(r"\d", password):
         score += 1
+    else:
+        feedback.append("Add numbers")
 
     # Symbol check
     if re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
         score += 1
+    else:
+        feedback.append("Add special symbols")
 
     # Strength rating
     if score <= 2:
@@ -54,7 +66,7 @@ def check_password(password):
         strength = "Strong"
         color = Fore.GREEN
 
-    return strength, color
+    return strength, color, feedback
 
 # Main program loop
 while True:
@@ -70,9 +82,14 @@ while True:
 
         password = input(Fore.WHITE + "Enter password: ")
 
-        strength, color = check_password(password)
+        strength, color, feedback = check_password(password)
 
         print(color + f"\nPassword Strength: {strength}")
+
+        if feedback:
+            print(Fore.CYAN + "Feedback:")
+            for item in feedback:
+                print(Fore.WHITE + f" - {item}")
 
         write_log(password, strength)
 
