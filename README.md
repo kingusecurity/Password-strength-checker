@@ -215,23 +215,6 @@ Planned upgrades:
 - HaveIBeenPwned API integration
 - Advanced password scoring system
 
----
-
-# Screenshot
-
-Add screenshots inside:
-
-```text
-screenshots/
-```
-
-Example:
-
-```markdown
-![Tool Screenshot](screenshots/tool.png)
-```
-
----
 
 # Learning Purpose
 
