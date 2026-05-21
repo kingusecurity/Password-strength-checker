@@ -1,4 +1,6 @@
 import re
+import random
+import string
 from colorama import init, Fore
 from datetime import datetime
 
@@ -6,14 +8,14 @@ from datetime import datetime
 init()
 
 # Logging function
-def write_log(password, strength):
+def write_log(action, data):
 
     with open("log.txt", "a") as log_file:
 
         timestamp = datetime.now()
 
         log_file.write(
-            f"[{timestamp}] Password Checked | Strength: {strength}\n"
+            f"[{timestamp}] {action}: {data}\n"
         )
 
 # Password checker function
@@ -27,7 +29,9 @@ def check_password(password):
     if len(password) >= 8:
         score += 1
     else:
-        feedback.append("Password should be at least 8 characters")
+        feedback.append(
+            "Password should be at least 8 characters"
+        )
 
     # Uppercase check
     if re.search(r"[A-Z]", password):
@@ -68,37 +72,114 @@ def check_password(password):
 
     return strength, color, feedback
 
+# Password generator function
+def generate_password(length):
+
+    characters = (
+        string.ascii_letters +
+        string.digits +
+        string.punctuation
+    )
+
+    password = ""
+
+    for _ in range(length):
+
+        password += random.choice(characters)
+
+    return password
+
 # Main program loop
 while True:
 
     print(Fore.CYAN + "\n=== Password Strength Checker ===")
+
     print(Fore.YELLOW + "1. Check Password")
-    print(Fore.YELLOW + "2. Exit")
+    print(Fore.YELLOW + "2. Generate Secure Password")
+    print(Fore.YELLOW + "3. Exit")
 
     choice = input(Fore.WHITE + "Choose option: ")
 
     # Check password
     if choice == "1":
 
-        password = input(Fore.WHITE + "Enter password: ")
+        password = input(
+            Fore.WHITE + "Enter password: "
+        )
 
-        strength, color, feedback = check_password(password)
+        strength, color, feedback = (
+            check_password(password)
+        )
 
-        print(color + f"\nPassword Strength: {strength}")
+        print(
+            color +
+            f"\nPassword Strength: {strength}"
+        )
 
         if feedback:
-            print(Fore.CYAN + "Feedback:")
-            for item in feedback:
-                print(Fore.WHITE + f" - {item}")
 
-        write_log(password, strength)
+            print(Fore.CYAN + "\nSuggestions:")
+
+            for item in feedback:
+
+                print(
+                    Fore.WHITE + "- " + item
+                )
+
+        write_log("PASSWORD CHECKED", strength)
+
+    # Generate secure password
+    elif choice == "2":
+
+        try:
+
+            length = int(
+                input(
+                    Fore.WHITE +
+                    "Enter password length: "
+                )
+            )
+
+            password = generate_password(length)
+
+            print(
+                Fore.GREEN +
+                "\nGenerated Password:"
+            )
+
+            print(Fore.GREEN + password)
+
+            write_log(
+                "PASSWORD GENERATED",
+                password
+            )
+
+        except:
+
+            print(
+                Fore.RED +
+                "\nInvalid length!"
+            )
+
+            write_log(
+                "ERROR",
+                "Invalid password length"
+            )
 
     # Exit
-    elif choice == "2":
+    elif choice == "3":
 
         print(Fore.CYAN + "Goodbye!")
         break
 
     else:
 
-        print(Fore.RED + "\nInvalid choice!")
+        print(
+            Fore.RED +
+            "\nInvalid choice!"
+        )
+
+        write_log(
+            "ERROR",
+            "Invalid menu choice"
+        )
